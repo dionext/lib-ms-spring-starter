@@ -1,0 +1,126 @@
+spring:
+  cache:
+    caffeine:
+      spec: maximumSize=3,expireAfterAccess=24h
+  cloud:
+    openfeign:
+      autoconfiguration:
+        jackson:
+        #enabled=false:
+  application:
+    name: ${info.name}
+  main:
+    allow-bean-definition-overriding: true
+    banner-mode: "off"
+    log-startup-info: true
+  #config:
+    #import: application-imported.yaml
+  #https://www.baeldung.com/spring-boot-web-server-shutdown
+  lifecycle:
+    timeout-per-shutdown-phase: "1m"
+
+# web server
+server:
+  port: 8080
+  compression:
+    enabled: false
+  error:
+    include-binding-errors: never
+    include-exception: false
+    include-message: never
+    include-stacktrace: never
+    whitelabel.enabled: true
+  http2.enabled: true
+  max-http-header-size: 8KB
+  #https://www.baeldung.com/spring-boot-web-server-shutdown
+  shutdown:
+    graceful # see also spring.lifecycle.timeout-per-shutdown-phase=1m
+
+#metrics
+#https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html
+management:
+  endpoints:
+    web:
+      exposure.include:
+        - health
+        - loggers
+        - prometheus
+        - info
+        - mappings
+        - flyway
+      #base-path: /
+      path-mapping:
+        #prometheus: metrics
+        prometheus: prometheus
+  endpoint:
+    loggers:
+      enabled: true
+    health:
+      enabled: true
+      show-details: always
+      show-components: always
+      #group:
+      #  liveness.include: ["*"]
+      #  readiness.include: ["*"]
+    info.enabled: true
+    mappings.enabled: true
+    prometheus.enabled: true
+    metrics.enabled: false
+    beans.enabled: false
+    logfile.enabled: false
+    caches.enabled: false
+    conditions.enabled: false
+    configprops.enabled: false
+    httptrace.enabled: false
+    threaddump.enabled: false
+    heapdump.enabled: false
+    auditevents.enabled: false
+    flyway.enabled: true
+  health:
+    defaults.enabled: false
+    probes.enabled: true
+    ping.enabled: true
+  metrics:
+    #export:
+    # elastic:
+    #  host: https://elastic.example.com:8086:
+    # ??????? ?? ??? ???????? ??????? ?? ??????? ? ?????????? ????????
+    # ? ??????? ?????????? (??????? http.server.requests)
+    web.server.request.autotime:
+      enabled: true
+      percentiles-histogram: true
+    web.client.request.autotime:
+      percentiles-histogram: true
+    tags:
+      app: ${info.name}
+  info:
+    java:
+      enabled: true
+    env:
+      enabled: true
+
+      #metrics:
+      #  export:
+      #    prometheus:
+      #     enabled: true
+      #  distribution:
+  #    percentiles-histogram:
+  #      "[http.server.requests]": true
+
+#springdoc:
+#  api-docs:
+#    resolve-schema-properties: true
+#    path: /api
+#  swagger-ui:
+#    path: /api/doc
+#    layout: BaseLayout
+#    display-request-duration: true
+#    show-extensions: true
+#    show-common-extensions: true
+
+
+# logging
+logging:
+  config: classpath:${LOGBACK:logback.xml}
+
+
