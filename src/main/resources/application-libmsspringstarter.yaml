@@ -13,14 +13,14 @@ spring:
     allow-bean-definition-overriding: true
     banner-mode: "off"
     log-startup-info: true
-  #config:
-    #import: application-imported.yaml
-  #https://www.baeldung.com/spring-boot-web-server-shutdown
   lifecycle:
     timeout-per-shutdown-phase: "1m"
 
 # web server
 server:
+  shutdown:
+    graceful # see also spring.lifecycle.timeout-per-shutdown-phase=1m
+
   port: 8080
   compression:
     enabled: false
@@ -33,8 +33,6 @@ server:
   http2.enabled: true
   max-http-header-size: 8KB
   #https://www.baeldung.com/spring-boot-web-server-shutdown
-  shutdown:
-    graceful # see also spring.lifecycle.timeout-per-shutdown-phase=1m
 
 #metrics
 #https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html
